@@ -3,18 +3,32 @@ import UIKit
 
 final class AboutFarmVC: UIViewController {
     
+    private enum Cells {
+        case banner(AboutFarmBannerCell.Model)
+        case about(AboutFarmAboutCell.Model)
+    }
+    
     private lazy var collectionView: UICollectionView = {
+       
         let collectionView = UICollectionView(
             frame: .zero,
-            collectionViewLayout: UICollectionViewFlowLayout()
+            collectionViewLayout: makeCollectionLayout()
         )
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "id")
+        collectionView.register(AboutFarmBannerCell.self, forCellWithReuseIdentifier: AboutFarmBannerCell.identifier)
+        collectionView.register(AboutFarmAboutCell.self, forCellWithReuseIdentifier: AboutFarmAboutCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
     }()
+    
+    private var dataSourse: [Cells] = [
+        .banner(AboutFarmBannerCell.Model(image: .horseBanner, title: "Место где становятся ближе к природе", subtitle: "Знакомим детей и взрослых с животными бережно и по-настоящему"
+        )),
+        .about(AboutFarmAboutCell.Model(text: "Мы создали Horse Man Wings, чтобы у каждого была возможность остановиться, выдохнуть и почувствовать живое общение с природой."
+        ))
+    ]
     
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -39,7 +53,7 @@ final class AboutFarmVC: UIViewController {
         let image = UIImageView()
         image.contentMode = .scaleAspectFit
         image.image = UIImage(named: "farmLogo")
-        image.layer.cornerRadius = 10
+        image.layer.cornerRadius = 15
         image.clipsToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
         
@@ -72,7 +86,7 @@ final class AboutFarmVC: UIViewController {
         button.setImage(UIImage(systemName: "bell"), for: .normal)
         button.tintColor = .black
         button.backgroundColor = .white
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 15
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -83,6 +97,21 @@ final class AboutFarmVC: UIViewController {
         setupUI()
         setupConstraint()
         view.backgroundColor = AppColors.mainBackground
+    }
+    
+    private func makeCollectionLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(390))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 30 
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        section.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 16,
+            bottom: 0,
+            trailing: 16)
+        return layout
     }
     
     private func setupUI() {
@@ -117,11 +146,25 @@ final class AboutFarmVC: UIViewController {
 
 extension AboutFarmVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        3
+        dataSourse.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        collectionView.dequeueReusableCell(withReuseIdentifier: "id", for: indexPath)
+        let item = dataSourse[indexPath.item]
+        
+        switch item {
+        case let .banner(model):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier:AboutFarmBannerCell.identifier, for: indexPath) as! AboutFarmBannerCell
+            cell.configure(model: model)
+            
+        return cell
+            
+        case let .about(model):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier:AboutFarmAboutCell.identifier, for: indexPath) as! AboutFarmAboutCell
+            cell.configure(model: model)
+            
+        return cell
+        }
     }
 }
 
