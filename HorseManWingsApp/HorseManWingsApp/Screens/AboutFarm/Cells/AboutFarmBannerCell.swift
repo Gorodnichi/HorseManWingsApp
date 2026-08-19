@@ -13,7 +13,7 @@ final class AboutFarmBannerCell: UICollectionViewCell {
     private let backgroundImageView: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFit
-        image.layer.cornerRadius = 100
+        image.layer.cornerRadius = 30
         image.clipsToBounds = true
         image.layer.masksToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -88,8 +88,8 @@ final class AboutFarmBannerCell: UICollectionViewCell {
         contentView.addSubview(bannerBackground)
         bannerBackground.contentView.addSubview(badgeLabel)
         
-//        contentView.layer.cornerRadius = 30
-//        contentView.clipsToBounds = true
+        contentView.layer.cornerRadius = 30
+        contentView.clipsToBounds = true
         
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -102,7 +102,6 @@ final class AboutFarmBannerCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             bannerBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 40),
             bannerBackground.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 210),
-            //bannerBackground.bottomAnchor.constraint(equalTo: contentSteck.topAnchor, constant: 10),
             bannerBackground.widthAnchor.constraint(equalToConstant: 110),
             bannerBackground.heightAnchor.constraint(equalToConstant: 40),
             
@@ -124,7 +123,6 @@ final class AboutFarmBannerCell: UICollectionViewCell {
     }
     func configure(model: Model) { // удалил badgeTitlt: String
         backgroundImageView.image = model.image
-       // badgeLabel.text = badgeTitle
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
     }

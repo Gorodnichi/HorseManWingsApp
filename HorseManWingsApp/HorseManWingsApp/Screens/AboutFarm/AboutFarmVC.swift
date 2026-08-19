@@ -64,7 +64,7 @@ final class AboutFarmVC: UIViewController {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
         label.text = "СЕМЕЙНАЯ ФЕРМА"
-        label.textColor = AppColors.farmColors
+        label.textColor = UIColor(named: "farmColors")
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -96,7 +96,7 @@ final class AboutFarmVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
-        view.backgroundColor = AppColors.mainBackground
+        view.backgroundColor = UIColor(named: "mainBackground")
     }
     
     private func makeCollectionLayout() -> UICollectionViewLayout {
