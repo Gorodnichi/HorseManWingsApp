@@ -105,12 +105,12 @@ final class AboutFarmVC: UIViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 30 
+		section.contentInsets = NSDirectionalEdgeInsets(
+			top: 0,
+			leading: 16,
+			bottom: 0,
+			trailing: 16)
         let layout = UICollectionViewCompositionalLayout(section: section)
-        section.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: 16,
-            bottom: 0,
-            trailing: 16)
         return layout
     }
     

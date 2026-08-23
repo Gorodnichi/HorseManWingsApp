@@ -1,5 +1,6 @@
 # Xcode personal settings
 xcuserdata/
+*.xcuserstate
 
 # macOS
 .DS_Store

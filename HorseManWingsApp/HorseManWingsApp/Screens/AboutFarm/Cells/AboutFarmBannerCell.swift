@@ -12,7 +12,7 @@ final class AboutFarmBannerCell: UICollectionViewCell {
     
     private let backgroundImageView: UIImageView = {
         let image = UIImageView()
-        image.contentMode = .scaleAspectFit
+		image.contentMode = .scaleToFill
         image.layer.cornerRadius = 30
         image.clipsToBounds = true
         image.layer.masksToBounds = true
