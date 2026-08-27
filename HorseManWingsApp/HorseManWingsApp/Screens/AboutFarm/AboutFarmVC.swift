@@ -6,6 +6,7 @@ final class AboutFarmVC: UIViewController {
     private enum Cells {
         case banner(AboutFarmBannerCell.Model)
         case aboutText(AboutFarmTextCell.Model)
+        case aboutCard(AboutFarmCardsCell.Model)
     }
     
     private struct Section {
@@ -23,11 +24,11 @@ final class AboutFarmVC: UIViewController {
         collectionView.dataSource = self
         collectionView.register(AboutFarmBannerCell.self, forCellWithReuseIdentifier: AboutFarmBannerCell.identifier)
         collectionView.register(AboutFarmTextCell.self, forCellWithReuseIdentifier: AboutFarmTextCell.identifier)
-        collectionView.register(
-            AboutFarmSectionHeaderView.self,
+        collectionView.register(AboutFarmSectionHeaderView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: AboutFarmSectionHeaderView.identifire
         )
+        collectionView.register(AboutFarmCardsCell.self, forCellWithReuseIdentifier: AboutFarmCardsCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
@@ -53,6 +54,18 @@ final class AboutFarmVC: UIViewController {
                     badgeTitle: "8 лет вместе",
                     subtitle: "Мы создали Horse Man Wings, чтобы у каждого была возможность остановиться, выдохнуть и почувствовать живое общение с природой.",
                     quote: "<<Забота дает крылья>>"
+                ))
+            ]
+        ),
+        
+        Section(
+            title: nil,
+            cells: [
+                .aboutCard(AboutFarmCardsCell.Model(
+                    titleCare: "Забота",
+                    subtitleCare: "Уважение и бережное отношение к каждому животному.",
+                    titleImpressions: "Впечатления",
+                    subtitleImpressions: "Тёплые встречи, которые остаются в памяти надолго."
                 ))
             ]
         )
@@ -223,6 +236,12 @@ extension AboutFarmVC: UICollectionViewDataSource {
             
         case let .aboutText(model):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier:AboutFarmTextCell.identifier, for: indexPath) as! AboutFarmTextCell
+            cell.configure(model: model)
+            
+            return cell
+            
+        case let .aboutCard(model):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AboutFarmCardsCell.identifier, for: indexPath) as! AboutFarmCardsCell
             cell.configure(model: model)
             
             return cell
