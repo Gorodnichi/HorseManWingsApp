@@ -8,6 +8,11 @@ final class AboutFarmVC: UIViewController {
         case aboutText(AboutFarmTextCell.Model)
     }
     
+    private struct Section {
+        let title: String?
+        let cells: [Cells]
+    }
+    
     private lazy var collectionView: UICollectionView = {
        
         let collectionView = UICollectionView(
@@ -18,28 +23,40 @@ final class AboutFarmVC: UIViewController {
         collectionView.dataSource = self
         collectionView.register(AboutFarmBannerCell.self, forCellWithReuseIdentifier: AboutFarmBannerCell.identifier)
         collectionView.register(AboutFarmTextCell.self, forCellWithReuseIdentifier: AboutFarmTextCell.identifier)
+        collectionView.register(
+            AboutFarmSectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: AboutFarmSectionHeaderView.identifire
+        )
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
     }()
     
-    private var dataSourse: [[Cells]] = [
-        [
-        .banner(AboutFarmBannerCell.Model(
-            image: .horseBanner,
-            title: "Место где становятся ближе к природе",
-            subtitle: "Знакомим детей и взрослых с животными бережно и по-настоящему"
-        )),
-        ],
-        [
-            .aboutText(AboutFarmTextCell.Model(
-            title: "О ферме",
-            badgeTitle: "8 лет вместе",
-            subtitle: "Мы создали Horse Man Wings, чтобы у каждого была возможность остановиться, выдохнуть и почувствовать живое общение с природой.",
-            quote: "<Забота дает крылья>"
-        )),
+    private var dataSourse: [Section] = [
+        Section(
+            title: nil,
+            cells: [
+                .banner(AboutFarmBannerCell.Model(
+                    image: .horseBanner,
+                    title: "Место где становятся ближе к природе",
+                    subtitle: "Знакомим детей и взрослых с животными бережно и по-настоящему"
+                ))
+            ]
+        ),
+        
+        Section(
+            title: "НАША ИСТОРИЯ",
+            cells: [
+                .aboutText(AboutFarmTextCell.Model(
+                    title: "О ферме",
+                    badgeTitle: "8 лет вместе",
+                    subtitle: "Мы создали Horse Man Wings, чтобы у каждого была возможность остановиться, выдохнуть и почувствовать живое общение с природой.",
+                    quote: "<<Забота дает крылья>>"
+                ))
+            ]
+        )
     ]
-]
     
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -58,7 +75,6 @@ final class AboutFarmVC: UIViewController {
         
         return stack
     }()
-    
     
     private let logoImage: UIImageView = {
         let image = UIImageView()
@@ -103,6 +119,7 @@ final class AboutFarmVC: UIViewController {
         
         return button
     }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -111,17 +128,47 @@ final class AboutFarmVC: UIViewController {
     }
     
     private func makeCollectionLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(390))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 30 
-		section.contentInsets = NSDirectionalEdgeInsets(
-			top: 0,
-			leading: 16,
-			bottom: 0,
-			trailing: 16)
-        let layout = UICollectionViewCompositionalLayout(section: section)
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
+
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(390)
+            )
+
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: itemSize,
+                subitems: [item]
+            )
+
+            let section = NSCollectionLayoutSection(group: group)
+
+            section.contentInsets = NSDirectionalEdgeInsets(
+                top: 6,
+                leading: 16,
+                bottom: 0,
+                trailing: 16
+            )
+
+            if sectionIndex > 0 {
+                let headerSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .absolute(30)
+                )
+
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: headerSize,
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top,
+                    absoluteOffset: CGPoint(x: 0, y: 33)
+                )
+                section.boundarySupplementaryItems = [header]
+            }
+
+            return section
+        }
+
         return layout
     }
     
@@ -161,25 +208,79 @@ extension AboutFarmVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataSourse[section].count
+        dataSourse[section].cells.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = dataSourse[indexPath.section][indexPath.item]
+        let item = dataSourse[indexPath.section].cells[indexPath.item]
         
         switch item {
         case let .banner(model):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier:AboutFarmBannerCell.identifier, for: indexPath) as! AboutFarmBannerCell
             cell.configure(model: model)
             
-        return cell
+            return cell
             
         case let .aboutText(model):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier:AboutFarmTextCell.identifier, for: indexPath) as! AboutFarmTextCell
             cell.configure(model: model)
             
-        return cell
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+        
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: AboutFarmSectionHeaderView.identifire,
+            for: indexPath
+        ) as! AboutFarmSectionHeaderView
+        
+        if let title = dataSourse[indexPath.section].title {
+                header.configure(title: title)
+        }
+        return header
+    }
+    
+    private final class AboutFarmSectionHeaderView: UICollectionReusableView {
+        
+        static let identifire = String(describing: AboutFarmSectionHeaderView.self)
+        
+        private let titleLabel: UILabel = {
+            
+            let label = UILabel()
+            
+            label.textColor = .farmColors
+            label.font = .systemFont(ofSize: 10, weight: .regular)
+            label.numberOfLines = 0
+            label.translatesAutoresizingMaskIntoConstraints = false
+            
+            return label
+        }()
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            
+            addSubview(titleLabel)
+            
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: topAnchor),
+                titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+                titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError()
+        }
+        
+        func configure(title: String) {
+            titleLabel.text = title
         }
     }
 }
-
