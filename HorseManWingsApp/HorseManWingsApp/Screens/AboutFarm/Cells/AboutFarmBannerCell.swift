@@ -12,7 +12,7 @@ final class AboutFarmBannerCell: UICollectionViewCell {
     
     private let backgroundImageView: UIImageView = {
         let image = UIImageView()
-		image.contentMode = .scaleToFill
+        image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = 30
         image.clipsToBounds = true
         image.layer.masksToBounds = true
@@ -92,15 +92,14 @@ final class AboutFarmBannerCell: UICollectionViewCell {
         contentView.clipsToBounds = true
         
         NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
             backgroundImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             backgroundImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            backgroundImageView.heightAnchor.constraint(equalToConstant: 390),
         ])
         
         NSLayoutConstraint.activate([
-            bannerBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 40),
+            bannerBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 16),
             bannerBackground.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 210),
             bannerBackground.widthAnchor.constraint(equalToConstant: 110),
             bannerBackground.heightAnchor.constraint(equalToConstant: 40),
@@ -115,13 +114,13 @@ final class AboutFarmBannerCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             contentSteck.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22),
-            contentSteck.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            contentSteck.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor, constant: 16),
             contentSteck.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -35),
         ])
         
         
     }
-    func configure(model: Model) { // удалил badgeTitlt: String
+    func configure(model: Model) {
         backgroundImageView.image = model.image
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
