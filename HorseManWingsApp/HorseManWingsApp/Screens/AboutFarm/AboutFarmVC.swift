@@ -79,7 +79,7 @@ final class AboutFarmVC: UIViewController {
     private let logoImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFit
-        image.image = UIImage(named: "farmLogo")
+		image.image = .icLogo
         image.layer.cornerRadius = 15
         image.clipsToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +91,7 @@ final class AboutFarmVC: UIViewController {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
         label.text = "СЕМЕЙНАЯ ФЕРМА"
-        label.textColor = UIColor(named: "farmColors")
+		label.textColor = .accent
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -124,7 +124,6 @@ final class AboutFarmVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
-        view.backgroundColor = UIColor(named: "mainBackground")
     }
     
     private func makeCollectionLayout() -> UICollectionViewLayout {
@@ -173,6 +172,7 @@ final class AboutFarmVC: UIViewController {
     }
     
     private func setupUI() {
+		view.backgroundColor = .mainBackground
         view.addSubview(collectionView)
         
         labelStackView.addArrangedSubview(titleLabel)
@@ -244,43 +244,5 @@ extension AboutFarmVC: UICollectionViewDataSource {
                 header.configure(title: title)
         }
         return header
-    }
-    
-    private final class AboutFarmSectionHeaderView: UICollectionReusableView {
-        
-        static let identifire = String(describing: AboutFarmSectionHeaderView.self)
-        
-        private let titleLabel: UILabel = {
-            
-            let label = UILabel()
-            
-            label.textColor = .farmColors
-            label.font = .systemFont(ofSize: 10, weight: .regular)
-            label.numberOfLines = 0
-            label.translatesAutoresizingMaskIntoConstraints = false
-            
-            return label
-        }()
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            
-            addSubview(titleLabel)
-            
-            NSLayoutConstraint.activate([
-                titleLabel.topAnchor.constraint(equalTo: topAnchor),
-                titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-                titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError()
-        }
-        
-        func configure(title: String) {
-            titleLabel.text = title
-        }
     }
 }

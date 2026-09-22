@@ -1,7 +1,11 @@
 import UIKit
 
 final class AboutFarmTextCell: UICollectionViewCell {
-    
+
+	private enum Constants {
+		static let badgeHeight: CGFloat = 30
+	}
+
     static let identifier = "AboutFarmTextCell"
     
     struct Model {
@@ -23,7 +27,7 @@ final class AboutFarmTextCell: UICollectionViewCell {
     
     private let badgeTitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .farmColors
+		label.textColor = .accent
         label.font = .systemFont(ofSize: 13, weight: .bold)
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +43,7 @@ final class AboutFarmTextCell: UICollectionViewCell {
             blue: 0.86,
             alpha: 1
         )
-        view.layer.cornerRadius = 30
+		view.layer.cornerRadius = Constants.badgeHeight / 2
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -47,7 +51,7 @@ final class AboutFarmTextCell: UICollectionViewCell {
     
     private var subtitleLabel:  UILabel = {
         let label = UILabel()
-        label.textColor = .subtitle
+		label.textColor = .greenGray
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.numberOfLines = 3
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +61,7 @@ final class AboutFarmTextCell: UICollectionViewCell {
     
     private let quoteLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .farmColors // поменять цвет
+		label.textColor = .accent
         label.font = .systemFont(ofSize: 21, weight: .regular)
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -95,7 +99,8 @@ final class AboutFarmTextCell: UICollectionViewCell {
     private lazy var titleRow: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [titleLabel, badgeBackground])
         stack.axis = .horizontal
-        stack.distribution = .equalSpacing
+		stack.distribution = .equalSpacing
+        stack.spacing = 12
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         
@@ -126,11 +131,12 @@ final class AboutFarmTextCell: UICollectionViewCell {
             
             titleRow.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
             
-            badgeBackground.widthAnchor.constraint(equalToConstant: 110),
-            badgeBackground.heightAnchor.constraint(equalToConstant: 40),
-            
+			badgeBackground.heightAnchor.constraint(equalToConstant: Constants.badgeHeight),
+
             badgeTitleLabel.centerXAnchor.constraint(equalTo: badgeBackground.contentView.centerXAnchor),
             badgeTitleLabel.centerYAnchor.constraint(equalTo: badgeBackground.contentView.centerYAnchor),
+            badgeTitleLabel.leadingAnchor.constraint(equalTo: badgeBackground.contentView.leadingAnchor, constant: 12),
+            badgeTitleLabel.trailingAnchor.constraint(equalTo: badgeBackground.contentView.trailingAnchor, constant: -12),
             
             iconQuote.widthAnchor.constraint(equalToConstant: 4),
             iconQuote.heightAnchor.constraint(equalToConstant: 30),
@@ -144,4 +150,3 @@ final class AboutFarmTextCell: UICollectionViewCell {
         quoteLabel.text = model.quote
     }
 }
-
