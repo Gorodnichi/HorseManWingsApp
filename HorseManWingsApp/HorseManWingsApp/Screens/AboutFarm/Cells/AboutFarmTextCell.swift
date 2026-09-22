@@ -128,7 +128,8 @@ final class AboutFarmTextCell: UICollectionViewCell {
             mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
+			mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
             titleRow.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
             
 			badgeBackground.heightAnchor.constraint(equalToConstant: Constants.badgeHeight),
