@@ -125,10 +125,11 @@ final class AboutFarmTextCell: UICollectionViewCell {
     
     private func constraintUI() {
         NSLayoutConstraint.activate([
-            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
+            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+			mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
             titleRow.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
             
 			badgeBackground.heightAnchor.constraint(equalToConstant: Constants.badgeHeight),
