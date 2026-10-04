@@ -5,8 +5,13 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+		setupConstraints()
     }
+
+	func setupConstraints() {
+		print("setup constraints")
+	}
 }
 
 
