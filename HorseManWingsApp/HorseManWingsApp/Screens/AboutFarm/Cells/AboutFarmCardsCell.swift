@@ -42,7 +42,7 @@ final class AboutFarmCardsCell: UICollectionViewCell {
     private let careSubtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .subtitle
+		label.textColor = .greenGray
         label.numberOfLines = 3
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -61,7 +61,7 @@ final class AboutFarmCardsCell: UICollectionViewCell {
     
     private let impressionsCardView: UIView = {
         let view = UIView()
-        view.backgroundColor = .impressions
+		view.backgroundColor = .beige
         view.layer.cornerRadius = 30
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -90,7 +90,7 @@ final class AboutFarmCardsCell: UICollectionViewCell {
     private let impressionsSubtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .subtitle
+		label.textColor = .greenGray
         label.numberOfLines = 3
         label.translatesAutoresizingMaskIntoConstraints = false
         
