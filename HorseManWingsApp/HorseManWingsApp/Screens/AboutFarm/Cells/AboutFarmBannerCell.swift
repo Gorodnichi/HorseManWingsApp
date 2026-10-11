@@ -8,8 +8,6 @@ final class AboutFarmBannerCell: UICollectionViewCell {
        let subtitle: String
     }
     
-    static let identifier = "AboutFarmBannerCell"
-    
     private let backgroundImageView: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill

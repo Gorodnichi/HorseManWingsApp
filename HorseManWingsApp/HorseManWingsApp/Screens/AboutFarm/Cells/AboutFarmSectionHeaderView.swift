@@ -2,8 +2,8 @@ import UIKit
 
 final class AboutFarmSectionHeaderView: UICollectionReusableView {
 
-	static let identifire = String(describing: AboutFarmSectionHeaderView.self)
-
+    static let identifier = String(describing: AboutFarmSectionHeaderView.self)
+    
 	private let titleLabel: UILabel = {
 
 		let label = UILabel()
