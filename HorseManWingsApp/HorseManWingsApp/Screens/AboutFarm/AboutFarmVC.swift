@@ -26,7 +26,7 @@ final class AboutFarmVC: UIViewController {
         collectionView.register(AboutFarmTextCell.self, forCellWithReuseIdentifier: AboutFarmTextCell.identifier)
         collectionView.register(AboutFarmSectionHeaderView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: AboutFarmSectionHeaderView.identifire
+            withReuseIdentifier: AboutFarmSectionHeaderView.identifier
         )
         collectionView.register(AboutFarmCardsCell.self, forCellWithReuseIdentifier: AboutFarmCardsCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -255,7 +255,7 @@ extension AboutFarmVC: UICollectionViewDataSource {
         
         let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: AboutFarmSectionHeaderView.identifire,
+            withReuseIdentifier: AboutFarmSectionHeaderView.identifier,
             for: indexPath
         ) as! AboutFarmSectionHeaderView
         

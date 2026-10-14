@@ -9,8 +9,6 @@ final class AboutFarmCardsCell: UICollectionViewCell {
         let subtitleImpressions: String
     }
     
-    static let identifier = "AboutFarmCardsCell"
-    
     private let careCardView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
