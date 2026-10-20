@@ -3,7 +3,7 @@ import UIKit
 final class AnimalsVC: UIViewController {
     
     private enum Cells {
-        
+        case preview(AboutAnimalsPreviewCell.Model)
     }
     
     private struct Section {
@@ -15,11 +15,25 @@ final class AnimalsVC: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionLayout()
         )
-        
+        collectionView.dataSource = self
+        collectionView.register(AboutAnimalsPreviewCell.self, forCellWithReuseIdentifier: AboutAnimalsPreviewCell.identifier)
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    
+    private var dataSource: [Section] = [
+        Section(
+            title: "НАШИ ЖИТЕЛИ",
+            cells: [
+                .preview(AboutAnimalsPreviewCell.Model(
+                    title: "НАШИ ЖИТЕЛИ",
+                    badgeTitle: "Животные",
+                    subtitle: "Познакомьтесь с теми, ради кого всё началось"
+                ))
+            ]
+        ),
+    ]
     
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -165,5 +179,25 @@ final class AnimalsVC: UIViewController {
     }
 }
 
-
+extension AnimalsVC: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        dataSource.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        dataSource[section].cells.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let item = dataSource[indexPath.section].cells[indexPath.item]
+        
+        switch item {
+        case let .preview(model):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AboutAnimalsPreviewCell.identifier, for: indexPath) as! AboutAnimalsPreviewCell
+            cell.configure(model: model)
+            
+            return cell
+        }
+    }
+}
 
