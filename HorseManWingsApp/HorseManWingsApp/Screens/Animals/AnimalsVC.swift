@@ -4,6 +4,7 @@ final class AnimalsVC: UIViewController {
     
     private enum Cells {
         case preview(AboutAnimalsPreviewCell.Model)
+        case search
     }
     
     private struct Section {
@@ -17,10 +18,13 @@ final class AnimalsVC: UIViewController {
         )
         collectionView.dataSource = self
         collectionView.register(AboutAnimalsPreviewCell.self, forCellWithReuseIdentifier: AboutAnimalsPreviewCell.identifier)
+        collectionView.register(AboutAnimalSearchCell.self, forCellWithReuseIdentifier: AboutAnimalSearchCell.identifier)
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    
+    private var searchText = ""
     
     private var dataSource: [Section] = [
         Section(
@@ -30,9 +34,16 @@ final class AnimalsVC: UIViewController {
                     title: "НАШИ ЖИТЕЛИ",
                     badgeTitle: "Животные",
                     subtitle: "Познакомьтесь с теми, ради кого всё началось"
-                ))
+                )),
+                
             ]
         ),
+        Section(
+            title: nil,
+            cells: [
+                .search
+            ]
+        )
     ]
     
     private let stackView: UIStackView = {
@@ -136,6 +147,31 @@ final class AnimalsVC: UIViewController {
     private func makeCollectionLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
             
+            if sectionIndex == 1 {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .absolute(46)
+                )
+
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: itemSize,
+                    subitems: [item]
+                )
+
+                let section = NSCollectionLayoutSection(group: group)
+
+                section.contentInsets = NSDirectionalEdgeInsets(
+                    top: 20,
+                    leading: 16,
+                    bottom: 0,
+                    trailing: 16
+                )
+
+                return section
+            }
+            
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
                 heightDimension: .estimated(390)
@@ -192,11 +228,25 @@ extension AnimalsVC: UICollectionViewDataSource {
         let item = dataSource[indexPath.section].cells[indexPath.item]
         
         switch item {
+            
         case let .preview(model):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AboutAnimalsPreviewCell.identifier, for: indexPath) as! AboutAnimalsPreviewCell
             cell.configure(model: model)
             
             return cell
+            
+        case .search:
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: AboutAnimalSearchCell.identifier,
+                for: indexPath
+            ) as! AboutAnimalSearchCell
+            
+            cell.onSearchTextChanged = { [weak self] text in
+                self?.searchText = text
+            }
+            
+            return cell
+
         }
     }
 }
