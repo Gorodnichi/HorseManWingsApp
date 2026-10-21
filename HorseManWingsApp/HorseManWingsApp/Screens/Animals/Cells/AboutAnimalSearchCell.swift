@@ -11,6 +11,7 @@ final class AboutAnimalSearchCell: UICollectionViewCell {
         textField.placeholder = "Найти животное"
         textField.font = .systemFont(ofSize: 14)
         textField.backgroundColor = .white
+        textField.textColor = .greenGray
         textField.attributedPlaceholder = NSAttributedString(string: "Найти животное", attributes: [.foregroundColor: UIColor.systemGray])
         textField.layer.cornerRadius = 22
         textField.clipsToBounds = true
