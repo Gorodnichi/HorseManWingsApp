@@ -5,6 +5,8 @@ final class AnimalsVC: UIViewController {
     private enum Cells {
         case preview(AboutAnimalsPreviewCell.Model)
         case search
+        case filter(AboutAnimalFilterCell.Model)
+
     }
     
     private struct Section {
@@ -19,6 +21,7 @@ final class AnimalsVC: UIViewController {
         collectionView.dataSource = self
         collectionView.register(AboutAnimalsPreviewCell.self, forCellWithReuseIdentifier: AboutAnimalsPreviewCell.identifier)
         collectionView.register(AboutAnimalSearchCell.self, forCellWithReuseIdentifier: AboutAnimalSearchCell.identifier)
+        collectionView.register(AboutAnimalFilterCell.self, forCellWithReuseIdentifier: AboutAnimalFilterCell.identifier)
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
@@ -42,6 +45,16 @@ final class AnimalsVC: UIViewController {
             title: nil,
             cells: [
                 .search
+            ]
+        ),
+        
+        Section(title: nil,
+                cells: [.filter(AboutAnimalFilterCell.Model(
+                    all: "Все",
+                    horses: "Лошади",
+                    birds: "Птицы",
+                    farm: "Ферма")
+                )
             ]
         )
     ]
@@ -187,7 +200,7 @@ final class AnimalsVC: UIViewController {
             let section = NSCollectionLayoutSection(group: group)
             
             section.contentInsets = NSDirectionalEdgeInsets(
-                top: 6,
+                top: 12,
                 leading: 16,
                 bottom: 0,
                 trailing: 16
@@ -247,6 +260,12 @@ extension AnimalsVC: UICollectionViewDataSource {
             
             return cell
 
+        case let .filter(model):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AboutAnimalFilterCell.identifier, for: indexPath) as! AboutAnimalFilterCell
+            
+            cell.configure(model: model)
+            
+            return cell
         }
     }
 }
