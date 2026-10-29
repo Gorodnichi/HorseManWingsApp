@@ -11,7 +11,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: scene)
         
-        window.rootViewController = AppTabBarController()
+        if #available(iOS 26.0, *) {
+            window.rootViewController = AppTabBarController()
+        } else {
+            window.rootViewController = AppTabBarControllerLegacy()
+        }
         self.window = window
         window.makeKeyAndVisible()
     }
