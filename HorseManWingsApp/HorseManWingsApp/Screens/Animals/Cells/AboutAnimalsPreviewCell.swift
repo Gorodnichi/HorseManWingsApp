@@ -8,8 +8,6 @@ final class AboutAnimalsPreviewCell: UICollectionViewCell {
         let subtitle: String
     }
     
-    static let identifier = "AboutAnimalsPreviewCell"
-    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .accent

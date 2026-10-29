@@ -1,54 +1,31 @@
 import UIKit
 
 final class AboutAnimalFilterCell: UICollectionViewCell {
-    
-    static let identifier = "AboutAnimalFilterCell"
-    
     struct Model {
-        let all: String
-        let horses: String
-        let birds: String
-        let farm: String
+		let animals: [Animals]
+
+		struct Animals {
+			let title: String
+		}
     }
     
     private var selectedFilter = 0
     
-    private let allButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-    }()
-    
-    private let horsesButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-    }()
-    
-    private let birdsButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-    }()
-    
-    private let farmButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
+    private var buttons: [UIButton] = []
+
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
     }()
     
     private lazy var stackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [allButton, horsesButton, birdsButton, farmButton])
+        let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 8
-        stack.alignment = .center
-        stack.distribution = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
-        
+
         return stack
     }()
     
@@ -56,72 +33,56 @@ final class AboutAnimalFilterCell: UICollectionViewCell {
         super.init(frame: frame)
         setupUI()
         setupConstraint()
-        setupAppearance()
-        updateButtonStyles()
-        setupButton()
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     
     private func setupUI() {
-        contentView.addSubview(stackView)
+        contentView.addSubview(scrollView)
+        scrollView.addSubview(stackView)
     }
     
     private func setupConstraint() {
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            scrollView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            stackView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
         ])
     }
     
-    private func setupAppearance() {
-        let buttons = [
-            allButton,
-            horsesButton,
-            birdsButton,
-            farmButton
-        ]
+    private func setupAppearance(for button: UIButton) {
+        button.titleLabel?.font = .systemFont(
+            ofSize: 15,
+            weight: .bold
+        )
 
-        buttons.forEach { button in
-            button.titleLabel?.font = .systemFont(
-                ofSize: 15,
-                weight: .bold
-            )
+        button.clipsToBounds = true
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.systemGray.cgColor
 
-            button.layer.cornerRadius = 20
-            button.clipsToBounds = true
-            button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor.systemGray.cgColor
+        button.contentEdgeInsets = UIEdgeInsets(
+            top: 8,
+            left: 14,
+            bottom: 8,
+            right: 14
+        )
 
-            button.contentEdgeInsets = UIEdgeInsets(
-                top: 10,
-                left: 10,
-                bottom: 10,
-                right: 10
-            )
-
-            button.setTitleColor( .oliveGray, for: .normal)
-            button.backgroundColor = .white
-            
-            
-        }
-
-        updateButtonStyles()
+        button.setTitleColor(.oliveGray, for: .normal)
+        button.backgroundColor = .white
     }
     
     private func updateButtonStyles() {
-        let buttons = [
-            allButton,
-            horsesButton,
-            birdsButton,
-            farmButton
-        ]
-
         for (index, button) in buttons.enumerated() {
             let isSelected = index == selectedFilter
 
@@ -132,21 +93,7 @@ final class AboutAnimalFilterCell: UICollectionViewCell {
         }
     }
     
-    private func setupButton() {
-        allButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
-        horsesButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
-        birdsButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
-        farmButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
-    }
-    
     @objc private func filterButtonTapped(_ sender: UIButton) {
-        let buttons = [
-            allButton,
-            horsesButton,
-            birdsButton,
-            farmButton
-        ]
-
         guard let index = buttons.firstIndex(of: sender) else {
             return
         }
@@ -156,10 +103,24 @@ final class AboutAnimalFilterCell: UICollectionViewCell {
     }
     
     func configure(model: Model) {
-        allButton.setTitle(model.all, for: .normal)
-        horsesButton.setTitle(model.horses, for: .normal)
-        birdsButton.setTitle(model.birds, for: .normal)
-        farmButton.setTitle(model.farm, for: .normal)
+        buttons.forEach { button in
+            stackView.removeArrangedSubview(button)
+            button.removeFromSuperview()
+        }
+
+        buttons = model.animals.map { animal in
+            let button = FilterButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.setTitle(animal.title, for: .normal)
+            setupAppearance(for: button)
+            button.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+            stackView.addArrangedSubview(button)
+            return button
+        }
+
+        if !buttons.indices.contains(selectedFilter) {
+            selectedFilter = 0
+        }
         
         updateButtonStyles()
     }

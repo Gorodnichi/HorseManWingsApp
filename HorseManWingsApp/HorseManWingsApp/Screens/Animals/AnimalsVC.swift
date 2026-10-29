@@ -19,6 +19,7 @@ final class AnimalsVC: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionLayout()
         )
         collectionView.dataSource = self
+		collectionView.keyboardDismissMode = .onDrag
         collectionView.register(AboutAnimalsPreviewCell.self, forCellWithReuseIdentifier: AboutAnimalsPreviewCell.identifier)
         collectionView.register(AboutAnimalSearchCell.self, forCellWithReuseIdentifier: AboutAnimalSearchCell.identifier)
         collectionView.register(AboutAnimalFilterCell.self, forCellWithReuseIdentifier: AboutAnimalFilterCell.identifier)
@@ -47,18 +48,20 @@ final class AnimalsVC: UIViewController {
                 .search
             ]
         ),
-        
-        Section(title: nil,
-                cells: [.filter(AboutAnimalFilterCell.Model(
-                    all: "Все",
-                    horses: "Лошади",
-                    birds: "Птицы",
-                    farm: "Ферма")
-                )
-            ]
-        )
+
+		Section(
+			title: nil,
+			cells: [
+				.filter(AboutAnimalFilterCell.Model(animals: [
+					AboutAnimalFilterCell.Model.Animals(title: "Все"),
+					AboutAnimalFilterCell.Model.Animals(title: "Лошади"),
+					AboutAnimalFilterCell.Model.Animals(title: "Птицы"),
+					AboutAnimalFilterCell.Model.Animals(title: "Ферма"),
+				]))
+			]
+		)
     ]
-    
+
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.spacing = 8
@@ -130,6 +133,11 @@ final class AnimalsVC: UIViewController {
     private func setupUI() {
         view.backgroundColor = .mainBackground
         view.addSubview(collectionView)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        collectionView.addGestureRecognizer(tapGesture)
         
         labelStackView.addArrangedSubview(titleLabel)
         labelStackView.addArrangedSubview(farmNameLabel)
@@ -156,38 +164,16 @@ final class AnimalsVC: UIViewController {
             
         ])
     }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     private func makeCollectionLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
-            
-            if sectionIndex == 1 {
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(46)
-                )
-
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: itemSize,
-                    subitems: [item]
-                )
-
-                let section = NSCollectionLayoutSection(group: group)
-
-                section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 20,
-                    leading: 16,
-                    bottom: 0,
-                    trailing: 16
-                )
-
-                return section
-            }
-            
+        UICollectionViewCompositionalLayout { _, _ in
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(390)
+                heightDimension: .estimated(100)
             )
             
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -206,25 +192,23 @@ final class AnimalsVC: UIViewController {
                 trailing: 16
             )
             
-            if sectionIndex > 0 {
-                let headerSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(30)
-                )
-                
-                let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: headerSize,
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top,
-                    absoluteOffset: CGPoint(x: 0, y: 33)
-                )
-                section.boundarySupplementaryItems = [header]
-            }
-            
             return section
         }
-        
-        return layout
+    }
+}
+
+extension AnimalsVC: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        var touchedView = touch.view
+
+        while let currentView = touchedView {
+            if currentView is UITextField {
+                return false
+            }
+            touchedView = currentView.superview
+        }
+
+        return true
     }
 }
 
@@ -269,4 +253,3 @@ extension AnimalsVC: UICollectionViewDataSource {
         }
     }
 }
-

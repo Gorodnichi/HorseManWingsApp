@@ -2,8 +2,6 @@ import UIKit
 
 final class AboutAnimalSearchCell: UICollectionViewCell {
     
-    static let identifier = "AboutAnimalSearchCell"
-    
     var onSearchTextChanged: ((String) -> Void)?
     
     private let searchTextField: UITextField = {
@@ -56,6 +54,7 @@ final class AboutAnimalSearchCell: UICollectionViewCell {
             searchTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             searchTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             searchTextField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+			searchTextField.heightAnchor.constraint(equalToConstant: 46),
 
             searchIcon.leadingAnchor.constraint(equalTo: searchTextField.leadingAnchor, constant: 18),
             searchIcon.centerYAnchor.constraint(equalTo: searchTextField.centerYAnchor),
