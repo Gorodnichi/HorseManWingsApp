@@ -19,17 +19,19 @@ final class AboutFarmVC: UIViewController {
             frame: .zero,
             collectionViewLayout: makeCollectionLayout()
         )
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.register(AboutFarmBannerCell.self, forCellWithReuseIdentifier: AboutFarmBannerCell.identifier)
-        collectionView.register(AboutFarmTextCell.self, forCellWithReuseIdentifier: AboutFarmTextCell.identifier)
-        collectionView.register(AboutFarmSectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: AboutFarmSectionHeaderView.identifier
-        )
-        collectionView.register(AboutFarmCardsCell.self, forCellWithReuseIdentifier: AboutFarmCardsCell.identifier)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
+        collectionView.backgroundColor = .clear
+		collectionView.dataSource = self
+		collectionView.register(AboutFarmBannerCell.self, forCellWithReuseIdentifier: AboutFarmBannerCell.identifier)
+		collectionView.register(AboutFarmTextCell.self, forCellWithReuseIdentifier: AboutFarmTextCell.identifier)
+		collectionView.register(
+			AboutFarmSectionHeaderView.self,
+			forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+			withReuseIdentifier: AboutFarmSectionHeaderView.identifier
+		)
+		collectionView.register(AboutFarmCardsCell.self, forCellWithReuseIdentifier: AboutFarmCardsCell.identifier)
+		collectionView.translatesAutoresizingMaskIntoConstraints = false
+
         return collectionView
     }()
     
