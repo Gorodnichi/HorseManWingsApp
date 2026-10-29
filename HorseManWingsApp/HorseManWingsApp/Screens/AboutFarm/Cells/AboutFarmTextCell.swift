@@ -5,8 +5,6 @@ final class AboutFarmTextCell: UICollectionViewCell {
 	private enum Constants {
 		static let badgeHeight: CGFloat = 30
 	}
-
-    static let identifier = "AboutFarmTextCell"
     
     struct Model {
         let title: String
